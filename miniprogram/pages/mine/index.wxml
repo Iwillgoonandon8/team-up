@@ -1,0 +1,100 @@
+<view>
+
+  <!-- 用户ID设置 -->
+  <view class="card user-card">
+    <text class="user-label">当前用户 ID</text>
+    <view class="user-row">
+      <input class="user-input" value="{{userIdInput}}" bindinput="onUserIdInput" placeholder="输入用户ID" />
+      <button class="btn btn-outline btn-sm" bindtap="saveUserId">保存</button>
+    </view>
+  </view>
+
+  <!-- Tab 切换 -->
+  <view class="tabs">
+    <view class="tab {{activeTab === 0 ? 'active' : ''}}" bindtap="switchTab" data-tab="0">我的队伍</view>
+    <view class="tab {{activeTab === 1 ? 'active' : ''}}" bindtap="switchTab" data-tab="1">
+      我的申请
+      <text class="badge" wx:if="{{myApplications.length > 0}}">{{myApplications.length}}</text>
+    </view>
+  </view>
+
+  <!-- Tab 0: 我的队伍 -->
+  <block wx:if="{{activeTab === 0}}">
+    <block wx:if="{{hasTeam && myTeam}}">
+      <view class="card">
+        <view class="team-header-row">
+          <view>
+            <text class="team-title">{{myTeam.team_name}}</text>
+            <view class="tag tag-blue" style="margin-top: 8rpx; display: inline-flex;">{{myTeam.topic}}</view>
+          </view>
+          <view class="tag {{isLeader ? 'tag-green' : 'tag-blue'}}">{{isLeader ? '队长' : '成员'}}</view>
+        </view>
+
+        <view class="team-stats">
+          <view class="stat">
+            <text class="stat-num">{{myTeam.current_members}}</text>
+            <text class="stat-label">当前成员</text>
+          </view>
+          <view class="stat-divider" />
+          <view class="stat">
+            <text class="stat-num">{{myTeam.max_members}}</text>
+            <text class="stat-label">最大人数</text>
+          </view>
+          <view class="stat-divider" />
+          <view class="stat">
+            <text class="stat-num {{myTeam.recruit_status === 'open' ? 'green' : 'gray'}}">
+              {{myTeam.recruit_status === 'open' ? '开放' : '关闭'}}
+            </text>
+            <text class="stat-label">招募状态</text>
+          </view>
+        </view>
+
+        <button class="btn btn-danger" wx:if="{{!isLeader}}" bindtap="onQuit">退出队伍</button>
+      </view>
+
+      <!-- 队长：待审核申请 -->
+      <block wx:if="{{isLeader}}">
+        <view class="section-title">待审核申请 ({{applications.length}})</view>
+
+        <view wx:if="{{applications.length === 0}}" class="empty">
+          <text>暂无待审核申请</text>
+        </view>
+
+        <view class="card apply-card" wx:for="{{applications}}" wx:key="apply_id">
+          <view class="apply-user">申请人：{{item.applicant_user_id}}</view>
+          <view class="apply-message">{{item.message}}</view>
+          <view class="apply-actions">
+            <button class="btn btn-primary btn-sm" bindtap="onApprove" data-apply-id="{{item.apply_id}}">通过</button>
+            <button class="btn btn-danger btn-sm" bindtap="onReject" data-apply-id="{{item.apply_id}}">拒绝</button>
+          </view>
+        </view>
+      </block>
+    </block>
+
+    <view wx:elif="{{!loading}}" class="empty">
+      <text>你还没有队伍</text>
+      <view style="margin-top: 32rpx; display: flex; gap: 24rpx;">
+        <button class="btn btn-primary btn-sm" bindtap="goBrowse">去找队伍</button>
+        <button class="btn btn-outline btn-sm" bindtap="goCreate">创建队伍</button>
+      </view>
+    </view>
+  </block>
+
+  <!-- Tab 1: 我的申请 -->
+  <block wx:if="{{activeTab === 1}}">
+    <view wx:if="{{myApplications.length === 0}}" class="empty">
+      <text>暂无申请记录</text>
+    </view>
+
+    <view class="card apply-card" wx:for="{{myApplications}}" wx:key="apply_id">
+      <view class="apply-header">
+        <text class="apply-team">队伍 ID: {{item.team_id}}</text>
+        <view class="tag {{item.status === 'approved' ? 'tag-green' : item.status === 'rejected' ? 'tag-red' : 'tag-yellow'}}">
+          {{item.status === 'approved' ? '已通过' : item.status === 'rejected' ? '已拒绝' : '待审核'}}
+        </view>
+      </view>
+      <view class="apply-message">{{item.message}}</view>
+    </view>
+  </block>
+
+</view>

@@ -1,0 +1,64 @@
+<view wx:if="{{team}}">
+
+  <!-- 队伍基本信息 -->
+  <view class="card">
+    <view class="detail-header">
+      <text class="detail-name">{{team.team_name}}</text>
+      <view class="tag {{team.recruit_status === 'open' ? 'tag-green' : 'tag-gray'}}">
+        {{team.recruit_status === 'open' ? '招募中' : '已满员'}}
+      </view>
+    </view>
+
+    <view class="detail-row">
+      <text class="label">话题</text>
+      <view class="tag tag-blue">{{team.topic}}</view>
+    </view>
+    <view class="detail-row">
+      <text class="label">成员</text>
+      <text class="value">{{team.current_members}} / {{team.max_members}} 人</text>
+    </view>
+    <view class="detail-row">
+      <text class="label">队长</text>
+      <text class="value">{{team.leader_user_id}}</text>
+    </view>
+  </view>
+
+  <!-- 我的队伍标识 -->
+  <view class="card notice-card" wx:if="{{isMyTeam}}">
+    <text>✅ 这是你的队伍</text>
+  </view>
+
+  <!-- 已申请 -->
+  <view class="card notice-card" wx:elif="{{alreadyApplied}}">
+    <text>⏳ 你已提交申请，等待审核</text>
+  </view>
+
+  <!-- 已有队伍但不是这个 -->
+  <view class="card notice-card" wx:elif="{{myTeam.hasTeam}}">
+    <text>ℹ️ 你已经有队伍了，无法申请</text>
+  </view>
+
+  <!-- 申请区域 -->
+  <view class="card" wx:elif="{{team.recruit_status === 'open'}}">
+    <text class="apply-title">申请加入</text>
+    <textarea
+      class="apply-input"
+      placeholder="介绍一下自己，为什么想加入这个队伍..."
+      value="{{message}}"
+      bindinput="onMessageInput"
+      maxlength="200"
+    />
+    <button class="btn btn-primary" bindtap="onApply" loading="{{applying}}" disabled="{{applying}}">
+      提交申请
+    </button>
+  </view>
+
+  <view class="card notice-card" wx:elif="{{team.recruit_status !== 'open'}}">
+    <text>🔒 该队伍已停止招募</text>
+  </view>
+
+</view>
+
+<view class="empty" wx:else>
+  <text>加载中...</text>
+</view>

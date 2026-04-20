@@ -1,0 +1,109 @@
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  padding: 16rpx 24rpx;
+  gap: 16rpx;
+}
+
+.search-input {
+  flex: 1;
+  height: 68rpx;
+  background: #f5f7fa;
+  border-radius: 34rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+}
+
+.search-btn {
+  background: #1a73e8;
+  color: #fff;
+  font-size: 26rpx;
+  height: 68rpx;
+  line-height: 68rpx;
+  padding: 0 28rpx;
+  border-radius: 34rpx;
+  border: none;
+  white-space: nowrap;
+}
+
+.filter-tabs {
+  display: flex;
+  background: #fff;
+  padding: 0 24rpx 16rpx;
+  gap: 16rpx;
+}
+
+.filter-tab {
+  padding: 8rpx 28rpx;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  color: #666;
+  background: #f5f7fa;
+}
+
+.filter-tab.active {
+  background: #e8f0fe;
+  color: #1a73e8;
+  font-weight: 500;
+}
+
+.team-card {
+  cursor: pointer;
+}
+
+.team-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.team-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #222;
+}
+
+.team-topic {
+  margin-bottom: 20rpx;
+}
+
+.team-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.team-members {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.team-arrow {
+  font-size: 36rpx;
+  color: #ccc;
+}
+
+.load-more {
+  text-align: center;
+  padding: 24rpx;
+  color: #999;
+  font-size: 24rpx;
+}
+
+.fab {
+  position: fixed;
+  right: 40rpx;
+  bottom: 120rpx;
+  width: 100rpx;
+  height: 100rpx;
+  background: #1a73e8;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 20rpx rgba(26, 115, 232, 0.4);
+}

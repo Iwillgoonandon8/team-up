@@ -1,0 +1,28 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/mine/index",
+    "pages/team-detail/index",
+    "pages/create-team/index"
+  ],
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#1a73e8",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "找队伍"
+      },
+      {
+        "pagePath": "pages/mine/index",
+        "text": "我的"
+      }
+    ]
+  },
+  "window": {
+    "navigationBarTitleText": "Team Up",
+    "navigationBarBackgroundColor": "#1a73e8",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f5f7fa"
+  }
+}

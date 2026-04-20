@@ -1,0 +1,48 @@
+<view class="card">
+  <view class="form-item">
+    <text class="form-label">队伍名称</text>
+    <input
+      class="form-input"
+      placeholder="给你的队伍起个名字"
+      value="{{teamName}}"
+      bindinput="onInput"
+      data-field="teamName"
+      maxlength="30"
+    />
+  </view>
+
+  <view class="form-item">
+    <text class="form-label">话题 / 方向</text>
+    <input
+      class="form-input"
+      placeholder="例如：AI创业、前端技术、游戏开发..."
+      value="{{topic}}"
+      bindinput="onInput"
+      data-field="topic"
+      maxlength="30"
+    />
+  </view>
+
+  <view class="form-item">
+    <text class="form-label">最多成员数：{{maxMembers}} 人</text>
+    <slider
+      min="2"
+      max="8"
+      value="{{maxMembers}}"
+      step="1"
+      show-value
+      activeColor="#1a73e8"
+      bindchange="onMembersChange"
+    />
+  </view>
+
+  <button
+    class="btn btn-primary"
+    style="margin-top: 16rpx;"
+    bindtap="onSubmit"
+    loading="{{submitting}}"
+    disabled="{{submitting}}"
+  >
+    创建队伍
+  </button>
+</view>
