@@ -1,12 +1,9 @@
 <view>
 
-  <!-- 用户ID设置 -->
+  <!-- 用户信息 -->
   <view class="card user-card">
-    <text class="user-label">当前用户 ID</text>
-    <view class="user-row">
-      <input class="user-input" value="{{userIdInput}}" bindinput="onUserIdInput" placeholder="输入用户ID" />
-      <button class="btn btn-outline btn-sm" bindtap="saveUserId">保存</button>
-    </view>
+    <text class="user-label">当前用户</text>
+    <text class="user-id">{{userId || '登录中...'}}</text>
   </view>
 
   <!-- Tab 切换 -->
@@ -96,5 +93,8 @@
       <view class="apply-message">{{item.message}}</view>
     </view>
   </block>
+
+  <!-- 管理员入口 -->
+  <view class="admin-entry" bindtap="goAdmin">管理员入口</view>
 
 </view>

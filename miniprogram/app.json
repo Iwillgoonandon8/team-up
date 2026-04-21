@@ -3,7 +3,9 @@
     "pages/index/index",
     "pages/mine/index",
     "pages/team-detail/index",
-    "pages/create-team/index"
+    "pages/create-team/index",
+    "pages/checkin/index",
+    "pages/admin/index"
   ],
   "tabBar": {
     "color": "#999999",

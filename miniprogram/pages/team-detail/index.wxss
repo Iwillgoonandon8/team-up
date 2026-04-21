@@ -2,7 +2,91 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24rpx;
+  margin-bottom: 16rpx;
+}
+
+.detail-tags {
+  display: flex;
+  gap: 10rpx;
+  margin-bottom: 20rpx;
+  flex-wrap: wrap;
+}
+
+.action-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.action-label {
+  font-size: 28rpx;
+  color: #34a853;
+}
+
+.checkin-card {
+  padding: 24rpx 28rpx;
+}
+
+.checkin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.checkin-user {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.checkin-milestone {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 10rpx;
+}
+
+.checkin-content {
+  display: block;
+  font-size: 26rpx;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 10rpx;
+}
+
+.checkin-blocked {
+  background: #fef7e0;
+  border-radius: 8rpx;
+  padding: 10rpx 16rpx;
+  margin-bottom: 10rpx;
+  display: flex;
+  gap: 8rpx;
+}
+
+.blocked-label {
+  font-size: 24rpx;
+  color: #f9ab00;
+  flex-shrink: 0;
+}
+
+.blocked-text {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.checkin-time {
+  display: block;
+  font-size: 22rpx;
+  color: #bbb;
+  text-align: right;
+}
+
+.load-more {
+  text-align: center;
+  padding: 24rpx;
+  color: #1a73e8;
+  font-size: 26rpx;
 }
 
 .detail-name {

@@ -9,10 +9,10 @@
   margin-bottom: 12rpx;
 }
 
-.user-row {
-  display: flex;
-  align-items: center;
-  gap: 16rpx;
+.user-id {
+  font-size: 24rpx;
+  color: #333;
+  word-break: break-all;
 }
 
 .user-input {
@@ -143,6 +143,13 @@
   color: #666;
   margin-bottom: 20rpx;
   line-height: 1.6;
+}
+
+.admin-entry {
+  text-align: center;
+  padding: 40rpx 0 60rpx;
+  font-size: 24rpx;
+  color: #ccc;
 }
 
 .apply-actions {

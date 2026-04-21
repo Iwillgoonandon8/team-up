@@ -5,6 +5,9 @@ import { AuthGuard } from './common/guards/auth.guard';
 import { ApplicationsModule } from './modules/applications/applications.module';
 import { TeamsModule } from './modules/teams/teams.module';
 import { FeishuModule } from './integrations/feishu/feishu.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { CheckinsModule } from './modules/checkins/checkins.module';
+import { SiteConfigModule } from './modules/site-config/site-config.module';
 
 @Module({
   imports: [
@@ -14,7 +17,10 @@ import { FeishuModule } from './integrations/feishu/feishu.module';
     }),
     FeishuModule,
     TeamsModule,
-    ApplicationsModule
+    ApplicationsModule,
+    AuthModule,
+    CheckinsModule,
+    SiteConfigModule,
   ],
   providers: [
     {

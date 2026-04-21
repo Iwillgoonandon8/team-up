@@ -1,15 +1,39 @@
 <view class="container">
 
+  <!-- 公告 -->
+  <view class="notice-banner" wx:if="{{siteConfig.notice}}">
+    <text class="notice-icon">📢</text>
+    <text class="notice-text">{{siteConfig.notice}}</text>
+  </view>
+
+  <!-- 报名状态提示 -->
+  <view class="status-banner closed-banner" wx:if="{{siteConfig && !siteConfig.teamRegOpen}}">
+    🔒 组队报名当前已关闭
+  </view>
+
   <!-- 搜索栏 -->
   <view class="search-bar">
     <input class="search-input" placeholder="搜索话题..." value="{{topicInput}}" bindinput="onTopicInput" bindconfirm="onTopicSearch" />
     <button class="search-btn" bindtap="onTopicSearch">搜索</button>
   </view>
 
-  <!-- 状态筛选 -->
+  <!-- 阶段筛选 -->
+  <scroll-view class="stage-scroll" scroll-x>
+    <view class="stage-tabs">
+      <view
+        class="stage-tab {{filterStage === '' ? 'active' : ''}}"
+        bindtap="onStageChange" data-stage="">全部</view>
+      <view
+        wx:for="{{stages}}" wx:key="*this"
+        class="stage-tab {{filterStage === item ? 'active' : ''}}"
+        bindtap="onStageChange" data-stage="{{item}}">{{item}}</view>
+    </view>
+  </scroll-view>
+
+  <!-- 招募状态筛选 -->
   <view class="filter-tabs">
-    <view class="filter-tab {{filterStatus === 'open' ? 'active' : ''}}" bindtap="onStatusChange" data-status="open">招募中</view>
     <view class="filter-tab {{filterStatus === '' ? 'active' : ''}}" bindtap="onStatusChange" data-status="">全部</view>
+    <view class="filter-tab {{filterStatus === 'open' ? 'active' : ''}}" bindtap="onStatusChange" data-status="open">招募中</view>
   </view>
 
   <!-- 队伍列表 -->
@@ -21,8 +45,9 @@
           {{item.recruit_status === 'open' ? '招募中' : '已满员'}}
         </view>
       </view>
-      <view class="team-topic">
+      <view class="team-tags">
         <view class="tag tag-blue">{{item.topic}}</view>
+        <view class="tag tag-yellow" wx:if="{{item.stage}}">{{item.stage}}</view>
       </view>
       <view class="team-footer">
         <text class="team-members">👥 {{item.current_members}} / {{item.max_members}} 人</text>

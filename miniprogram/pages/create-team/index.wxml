@@ -12,10 +12,17 @@
   </view>
 
   <view class="form-item">
+    <text class="form-label">学习阶段</text>
+    <picker mode="selector" range="{{stages}}" value="{{stageIndex}}" bindchange="onStageChange">
+      <view class="picker-val">{{stages[stageIndex]}} ▾</view>
+    </picker>
+  </view>
+
+  <view class="form-item">
     <text class="form-label">话题 / 方向</text>
     <input
       class="form-input"
-      placeholder="例如：AI创业、前端技术、游戏开发..."
+      placeholder="例如：NEMU实现、流水线设计..."
       value="{{topic}}"
       bindinput="onInput"
       data-field="topic"

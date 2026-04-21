@@ -1,0 +1,86 @@
+<!-- 未解锁：输入密钥 -->
+<view wx:if="{{!unlocked}}" class="card lock-card">
+  <text class="lock-title">🔐 管理员入口</text>
+  <input
+    class="form-input"
+    placeholder="输入管理员密钥"
+    password
+    value="{{keyInput}}"
+    bindinput="onKeyInput"
+  />
+  <button class="btn btn-primary" style="margin-top: 24rpx;" bindtap="unlock">进入</button>
+</view>
+
+<!-- 已解锁：配置面板 -->
+<view wx:else>
+
+  <!-- 公告 -->
+  <view class="card">
+    <view class="section-hd">📢 公告（展示给所有学员）</view>
+    <textarea
+      class="form-textarea"
+      placeholder="留空则不显示公告"
+      value="{{notice}}"
+      bindinput="onNoticeInput"
+      maxlength="200"
+    />
+  </view>
+
+  <!-- 组队报名 -->
+  <view class="card">
+    <view class="section-hd">
+      <text>👥 创建/加入队伍</text>
+      <view class="toggle {{teamRegEnabled ? 'on' : 'off'}}" bindtap="onToggle" data-field="teamRegEnabled">
+        {{teamRegEnabled ? '开启' : '关闭'}}
+      </view>
+    </view>
+    <view class="date-row">
+      <text class="date-label">开放日期</text>
+      <picker mode="date" value="{{teamRegOpenDate}}" bindchange="onDateChange" data-field="teamRegOpenDate">
+        <view class="date-val">{{teamRegOpenDate || '不限'}}</view>
+      </picker>
+    </view>
+    <view class="date-row">
+      <text class="date-label">截止日期</text>
+      <picker mode="date" value="{{teamRegCloseDate}}" bindchange="onDateChange" data-field="teamRegCloseDate">
+        <view class="date-val">{{teamRegCloseDate || '不限'}}</view>
+      </picker>
+    </view>
+    <view class="status-hint">
+      当前状态：<text class="{{cfg.teamRegOpen ? 'open' : 'closed'}}">{{cfg.teamRegOpen ? '✅ 开放中' : '🔒 已关闭'}}</text>
+    </view>
+  </view>
+
+  <!-- 打卡 -->
+  <view class="card">
+    <view class="section-hd">
+      <text>📝 打卡</text>
+      <view class="toggle {{checkinEnabled ? 'on' : 'off'}}" bindtap="onToggle" data-field="checkinEnabled">
+        {{checkinEnabled ? '开启' : '关闭'}}
+      </view>
+    </view>
+    <view class="date-row">
+      <text class="date-label">开放日期</text>
+      <picker mode="date" value="{{checkinOpenDate}}" bindchange="onDateChange" data-field="checkinOpenDate">
+        <view class="date-val">{{checkinOpenDate || '不限'}}</view>
+      </picker>
+    </view>
+    <view class="date-row">
+      <text class="date-label">截止日期</text>
+      <picker mode="date" value="{{checkinCloseDate}}" bindchange="onDateChange" data-field="checkinCloseDate">
+        <view class="date-val">{{checkinCloseDate || '不限'}}</view>
+      </picker>
+    </view>
+    <view class="status-hint">
+      当前状态：<text class="{{cfg.checkinOpen ? 'open' : 'closed'}}">{{cfg.checkinOpen ? '✅ 开放中' : '🔒 已关闭'}}</text>
+    </view>
+  </view>
+
+  <view style="padding: 0 24rpx 20rpx;">
+    <button class="btn btn-primary" bindtap="onSave" loading="{{saving}}" disabled="{{saving}}">保存配置</button>
+  </view>
+  <view style="padding: 0 24rpx 60rpx;">
+    <button class="btn btn-outline" bindtap="logout">退出管理员</button>
+  </view>
+
+</view>

@@ -7,11 +7,12 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { randomUUID } from 'crypto';
 import { BitableService } from '../../integrations/feishu/bitable.service';
-import { CreateTeamDto } from './dto';
+import { CreateTeamDto, MAX_TEAMS_PER_STAGE } from './dto';
 
 type ListTeamsParams = {
   status?: string;
   topic?: string;
+  stage?: string;
   page: number;
   pageSize: number;
 };
@@ -30,9 +31,17 @@ export class TeamsService {
   ) {}
 
   async createTeam(dto: CreateTeamDto, leaderUserId: string) {
-    const tableId = this.config.get<string>('FEISHU_TEAMS_TABLE_ID');
-    if (!tableId) {
-      throw new InternalServerErrorException('Missing FEISHU_TEAMS_TABLE_ID');
+    const tableId = this.getRequiredConfig('FEISHU_TEAMS_TABLE_ID');
+
+    // 每个阶段最多 MAX_TEAMS_PER_STAGE 支队伍
+    const all = await this.bitable.listAllRecords(tableId);
+    const countInStage = all.filter(
+      r => this.readString(r.fields['stage']) === dto.stage
+    ).length;
+    if (countInStage >= MAX_TEAMS_PER_STAGE) {
+      throw new BadRequestException(
+        `「${dto.stage}」阶段已有 ${MAX_TEAMS_PER_STAGE} 支队伍，暂不开放新建`
+      );
     }
 
     const teamId = randomUUID();
@@ -42,6 +51,7 @@ export class TeamsService {
       team_id: teamId,
       leader_user_id: leaderUserId,
       team_name: dto.teamName,
+      stage: dto.stage,
       topic: dto.topic,
       max_members: dto.maxMembers,
       current_members: 1,
@@ -58,6 +68,8 @@ export class TeamsService {
     const normalizedStatus = (params.status ?? '').trim();
     const normalizedTopic = (params.topic ?? '').trim();
 
+    const normalizedStage = (params.stage ?? '').trim();
+
     const filtered = all
       .map(record => ({ recordId: record.record_id, fields: record.fields }))
       .filter(item => {
@@ -72,6 +84,12 @@ export class TeamsService {
           !this.readString(item.fields['topic'])
             .toLowerCase()
             .includes(normalizedTopic.toLowerCase())
+        ) {
+          return false;
+        }
+        if (
+          normalizedStage &&
+          this.readString(item.fields['stage']) !== normalizedStage
         ) {
           return false;
         }

@@ -1,0 +1,69 @@
+.team-banner {
+  font-size: 26rpx;
+  color: #1a73e8;
+  font-weight: 500;
+  margin-bottom: 32rpx;
+}
+
+.form-item {
+  margin-bottom: 36rpx;
+}
+
+.form-label {
+  display: block;
+  font-size: 28rpx;
+  color: #444;
+  font-weight: 500;
+  margin-bottom: 14rpx;
+}
+
+.picker-val {
+  height: 80rpx;
+  line-height: 80rpx;
+  background: #f5f7fa;
+  border-radius: 12rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.form-input {
+  width: 100%;
+  height: 80rpx;
+  background: #f5f7fa;
+  border-radius: 12rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.form-textarea {
+  width: 100%;
+  min-height: 200rpx;
+  background: #f5f7fa;
+  border-radius: 12rpx;
+  padding: 20rpx 24rpx;
+  font-size: 28rpx;
+  color: #333;
+  box-sizing: border-box;
+  line-height: 1.6;
+}
+
+.tip {
+  margin-top: 0;
+}
+
+.tip-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #555;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.tip-text {
+  font-size: 24rpx;
+  color: #888;
+  line-height: 1.7;
+}

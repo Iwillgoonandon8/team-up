@@ -9,10 +9,11 @@
       </view>
     </view>
 
-    <view class="detail-row">
-      <text class="label">话题</text>
+    <view class="detail-tags">
+      <view class="tag tag-yellow" wx:if="{{team.stage}}">{{team.stage}}</view>
       <view class="tag tag-blue">{{team.topic}}</view>
     </view>
+
     <view class="detail-row">
       <text class="label">成员</text>
       <text class="value">{{team.current_members}} / {{team.max_members}} 人</text>
@@ -23,9 +24,10 @@
     </view>
   </view>
 
-  <!-- 我的队伍标识 -->
-  <view class="card notice-card" wx:if="{{isMyTeam}}">
-    <text>✅ 这是你的队伍</text>
+  <!-- 我的队伍：显示打卡按钮 -->
+  <view class="card action-card" wx:if="{{isMyTeam}}">
+    <text class="action-label">✅ 这是你的队伍</text>
+    <button class="btn btn-primary btn-sm" bindtap="goCheckin">📝 今日打卡</button>
   </view>
 
   <!-- 已申请 -->
@@ -33,7 +35,7 @@
     <text>⏳ 你已提交申请，等待审核</text>
   </view>
 
-  <!-- 已有队伍但不是这个 -->
+  <!-- 已有其他队伍 -->
   <view class="card notice-card" wx:elif="{{myTeam.hasTeam}}">
     <text>ℹ️ 你已经有队伍了，无法申请</text>
   </view>
@@ -55,6 +57,31 @@
 
   <view class="card notice-card" wx:elif="{{team.recruit_status !== 'open'}}">
     <text>🔒 该队伍已停止招募</text>
+  </view>
+
+  <!-- 打卡动态 -->
+  <view class="section-title">打卡动态</view>
+
+  <view wx:if="{{checkins.length === 0 && !loadingCheckins}}" class="empty">
+    <text>暂无打卡记录</text>
+  </view>
+
+  <view class="card checkin-card" wx:for="{{checkins}}" wx:key="checkin_id">
+    <view class="checkin-header">
+      <text class="checkin-user">{{item.user_id}}</text>
+      <view class="tag tag-yellow">{{item.stage}}</view>
+    </view>
+    <text class="checkin-milestone">🏁 {{item.milestone}}</text>
+    <text class="checkin-content">{{item.content}}</text>
+    <view class="checkin-blocked" wx:if="{{item.blocked_by}}">
+      <text class="blocked-label">🚧 卡在：</text>
+      <text class="blocked-text">{{item.blocked_by}}</text>
+    </view>
+    <text class="checkin-time">{{formatTime(item.created_at)}}</text>
+  </view>
+
+  <view class="load-more" wx:if="{{checkinHasMore}}" bindtap="onLoadMoreCheckins">
+    <text>{{loadingCheckins ? '加载中...' : '加载更多'}}</text>
   </view>
 
 </view>

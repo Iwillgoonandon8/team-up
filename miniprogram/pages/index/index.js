@@ -1,5 +1,7 @@
 const { request } = require('../../utils/request')
 
+const STAGES = ['F1_基础', 'F2_基础', 'F_加强', 'E1_基础', 'E2_基础', 'E_加强']
+
 Page({
   data: {
     teams: [],
@@ -8,12 +10,23 @@ Page({
     loading: false,
     hasMore: true,
     filterTopic: '',
-    filterStatus: 'open',
+    filterStatus: '',
+    filterStage: '',
     topicInput: '',
+    stages: STAGES,
+    siteConfig: null,
   },
 
   onShow() {
+    this.loadSiteConfig()
     this.reload()
+  },
+
+  async loadSiteConfig() {
+    try {
+      const cfg = await request({ url: '/site-config' })
+      this.setData({ siteConfig: cfg })
+    } catch {}
   },
 
   reload() {
@@ -25,11 +38,12 @@ Page({
     if (this.data.loading || !this.data.hasMore) return
     this.setData({ loading: true })
     try {
-      const { page, filterTopic, filterStatus } = this.data
-      const params = new URLSearchParams({ page, pageSize: 20 })
-      if (filterTopic) params.append('topic', filterTopic)
-      if (filterStatus) params.append('status', filterStatus)
-      const res = await request({ url: `/teams?${params}` })
+      const { page, filterTopic, filterStatus, filterStage } = this.data
+      let query = `page=${page}&pageSize=20`
+      if (filterTopic) query += `&topic=${encodeURIComponent(filterTopic)}`
+      if (filterStatus) query += `&status=${filterStatus}`
+      if (filterStage) query += `&stage=${encodeURIComponent(filterStage)}`
+      const res = await request({ url: `/teams?${query}` })
       const newList = this.data.page === 1 ? res.list : [...this.data.teams, ...res.list]
       this.setData({
         teams: newList,
@@ -57,6 +71,11 @@ Page({
 
   onStatusChange(e) {
     this.setData({ filterStatus: e.currentTarget.dataset.status })
+    this.reload()
+  },
+
+  onStageChange(e) {
+    this.setData({ filterStage: e.currentTarget.dataset.stage })
     this.reload()
   },
 

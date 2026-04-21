@@ -24,12 +24,14 @@ export class TeamsController {
   async list(
     @Query('status') status?: string,
     @Query('topic') topic?: string,
+    @Query('stage') stage?: string,
     @Query('page') page?: string,
     @Query('pageSize') pageSize?: string
   ) {
     return this.teamsService.listTeams({
       status,
       topic,
+      stage,
       page: Number(page ?? 1),
       pageSize: Number(pageSize ?? 20)
     });

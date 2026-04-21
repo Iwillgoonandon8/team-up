@@ -1,0 +1,61 @@
+<view class="card">
+  <view class="team-banner">📌 {{teamName || '未知队伍'}}</view>
+
+  <view class="form-item">
+    <text class="form-label">当前阶段</text>
+    <picker mode="selector" range="{{stages}}" value="{{stageIndex}}" bindchange="onStageChange">
+      <view class="picker-val">{{stages[stageIndex]}} ▾</view>
+    </picker>
+  </view>
+
+  <view class="form-item">
+    <text class="form-label">✅ 本次完成的里程碑</text>
+    <input
+      class="form-input"
+      placeholder="如：NEMU 成功运行 hello world"
+      value="{{milestone}}"
+      bindinput="onInput"
+      data-field="milestone"
+      maxlength="60"
+    />
+  </view>
+
+  <view class="form-item">
+    <text class="form-label">📝 详细内容</text>
+    <textarea
+      class="form-textarea"
+      placeholder="今天做了什么？遇到了什么问题？怎么解决的？"
+      value="{{content}}"
+      bindinput="onInput"
+      data-field="content"
+      maxlength="500"
+    />
+  </view>
+
+  <view class="form-item">
+    <text class="form-label">🚧 目前卡在哪里（选填）</text>
+    <input
+      class="form-input"
+      placeholder="如：不理解 NEMU 的内存寻址机制"
+      value="{{blockedBy}}"
+      bindinput="onInput"
+      data-field="blockedBy"
+      maxlength="100"
+    />
+  </view>
+
+  <button
+    class="btn btn-primary"
+    style="margin-top: 8rpx;"
+    bindtap="onSubmit"
+    loading="{{submitting}}"
+    disabled="{{submitting}}"
+  >
+    提交打卡
+  </button>
+</view>
+
+<view class="tip card">
+  <text class="tip-title">💡 好的打卡示例</text>
+  <text class="tip-text">「PA1.1 完成，NEMU 成功运行 hello world，截图附上；目前卡在 x86 内存寻址的段机制，还没理解段基地址如何与 GDT 关联」</text>
+</view>

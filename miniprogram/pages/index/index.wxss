@@ -1,3 +1,27 @@
+.notice-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12rpx;
+  background: #e8f0fe;
+  padding: 20rpx 24rpx;
+  border-left: 6rpx solid #1a73e8;
+}
+
+.notice-icon { font-size: 28rpx; flex-shrink: 0; }
+.notice-text { font-size: 26rpx; color: #1a73e8; line-height: 1.6; }
+
+.status-banner {
+  padding: 16rpx 24rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+  text-align: center;
+}
+
+.closed-banner {
+  background: #fce8e6;
+  color: #ea4335;
+}
+
 .search-bar {
   display: flex;
   align-items: center;
@@ -25,6 +49,40 @@
   border-radius: 34rpx;
   border: none;
   white-space: nowrap;
+}
+
+.stage-scroll {
+  background: #fff;
+  padding: 0 24rpx 12rpx;
+}
+
+.stage-tabs {
+  display: inline-flex;
+  gap: 12rpx;
+}
+
+.stage-tab {
+  display: inline-flex;
+  padding: 8rpx 24rpx;
+  border-radius: 30rpx;
+  font-size: 24rpx;
+  color: #666;
+  background: #f5f7fa;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.stage-tab.active {
+  background: #fef7e0;
+  color: #f9ab00;
+  font-weight: 500;
+}
+
+.team-tags {
+  display: flex;
+  gap: 10rpx;
+  margin-bottom: 20rpx;
+  flex-wrap: wrap;
 }
 
 .filter-tabs {

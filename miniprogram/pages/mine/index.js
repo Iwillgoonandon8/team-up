@@ -22,7 +22,14 @@ Page({
   async loadAll() {
     this.setData({ loading: true })
     try {
-      const myTeamRes = await request({ url: '/teams/my' })
+      // 单独捕获 /teams/my 的错误，避免它阻断后续加载
+      let myTeamRes = { hasTeam: false, team: null }
+      try {
+        myTeamRes = await request({ url: '/teams/my' })
+      } catch (e) {
+        // 忽略，继续加载我的申请
+      }
+
       const userId = app.globalData.userId
       const isLeader = myTeamRes.hasTeam && myTeamRes.team?.leader_user_id === userId
 
@@ -32,15 +39,18 @@ Page({
         isLeader,
       })
 
-      // Load applications in parallel
-      const tasks = [request({ url: '/applications' })]
+      // 并行加载申请数据
+      const tasks = [request({ url: '/applications' }).catch(() => ({ list: [] }))]
       if (isLeader && myTeamRes.team) {
-        tasks.push(request({ url: `/teams/${myTeamRes.team.team_id}/applications?status=pending` }))
+        tasks.push(
+          request({ url: `/teams/${myTeamRes.team.team_id}/applications?status=pending` })
+            .catch(() => ({ list: [] }))
+        )
       }
 
       const [myAppsRes, teamAppsRes] = await Promise.all(tasks)
       this.setData({
-        myApplications: myAppsRes.list,
+        myApplications: myAppsRes.list || [],
         applications: teamAppsRes?.list || [],
       })
     } finally {
@@ -49,7 +59,8 @@ Page({
   },
 
   switchTab(e) {
-    this.setData({ activeTab: e.currentTarget.dataset.tab })
+    // dataset 取出的是字符串，必须转为数字才能与 === 比较
+    this.setData({ activeTab: Number(e.currentTarget.dataset.tab) })
   },
 
   async onQuit() {
@@ -96,6 +107,10 @@ Page({
 
   onUserIdInput(e) {
     this.setData({ userIdInput: e.detail.value })
+  },
+
+  goAdmin() {
+    wx.navigateTo({ url: '/pages/admin/index' })
   },
 
   saveUserId() {
