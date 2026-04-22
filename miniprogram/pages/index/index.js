@@ -44,7 +44,7 @@ Page({
       if (filterStatus) query += `&status=${filterStatus}`
       if (filterStage) query += `&stage=${encodeURIComponent(filterStage)}`
       const res = await request({ url: `/teams?${query}` })
-      const newList = this.data.page === 1 ? res.list : [...this.data.teams, ...res.list]
+      const newList = this.data.page === 1 ? res.list : this.data.teams.concat(res.list)
       this.setData({
         teams: newList,
         total: res.total,

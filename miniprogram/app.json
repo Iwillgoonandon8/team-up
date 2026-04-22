@@ -21,6 +21,7 @@
       }
     ]
   },
+  "lazyCodeLoading": "requiredComponents",
   "window": {
     "navigationBarTitleText": "Team Up",
     "navigationBarBackgroundColor": "#1a73e8",

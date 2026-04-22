@@ -48,10 +48,10 @@ Page({
         )
       }
 
-      const [myAppsRes, teamAppsRes] = await Promise.all(tasks)
+      const results = await Promise.all(tasks)
       this.setData({
-        myApplications: myAppsRes.list || [],
-        applications: teamAppsRes?.list || [],
+        myApplications: results[0].list || [],
+        applications: results[1] ? results[1].list || [] : [],
       })
     } finally {
       this.setData({ loading: false })

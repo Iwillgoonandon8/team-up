@@ -28,15 +28,19 @@ Page({
   async loadAll() {
     wx.showLoading({ title: '加载中' })
     try {
-      const [teamsRes, myTeamRes, myAppsRes] = await Promise.all([
+      const results = await Promise.all([
         request({ url: `/teams?page=1&pageSize=100` }),
         request({ url: '/teams/my' }).catch(() => ({ hasTeam: false, team: null })),
         request({ url: '/applications' }).catch(() => ({ list: [] })),
       ])
+      const teamsRes = results[0]
+      const myTeamRes = results[1]
+      const myAppsRes = results[2]
       const team = teamsRes.list.find(t => t.team_id === this.data.teamId)
-      const isMyTeam = myTeamRes.hasTeam && myTeamRes.team?.team_id === this.data.teamId
+      const isMyTeam = myTeamRes.hasTeam && myTeamRes.team && myTeamRes.team.team_id === this.data.teamId
       const alreadyApplied = myAppsRes.list.some(
-        a => a.team_id === this.data.teamId && a.status === 'pending',
+        function(a) { return a.team_id === this.data.teamId && a.status === 'pending' },
+        this
       )
       this.setData({ team, myTeam: myTeamRes, isMyTeam, alreadyApplied })
     } finally {
@@ -54,7 +58,7 @@ Page({
       const res = await request({
         url: `/checkins/team/${this.data.teamId}?page=${page}&pageSize=10`,
       })
-      const list = reset ? res.list : [...this.data.checkins, ...res.list]
+      const list = reset ? res.list : this.data.checkins.concat(res.list)
       this.setData({
         checkins: list,
         checkinPage: page + 1,
