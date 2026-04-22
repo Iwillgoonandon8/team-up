@@ -1,3 +1,7 @@
+<view class="status-banner closed-banner" wx:if="{{!teamRegOpen}}" style="margin: 24rpx 24rpx 0;">
+  🔒 组队报名当前已关闭，暂不能创建队伍
+</view>
+
 <view class="card">
   <view class="form-item">
     <text class="form-label">队伍名称</text>
@@ -48,7 +52,7 @@
     style="margin-top: 16rpx;"
     bindtap="onSubmit"
     loading="{{submitting}}"
-    disabled="{{submitting}}"
+    disabled="{{submitting || !teamRegOpen}}"
   >
     创建队伍
   </button>

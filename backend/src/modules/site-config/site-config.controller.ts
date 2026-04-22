@@ -1,7 +1,6 @@
 import { Body, Controller, ForbiddenException, Get, Headers, Post, Put } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Public } from '../../common/utils/public.decorator';
-import { TeamsService } from '../teams/teams.service';
 import { UpdateSiteConfigDto } from './dto';
 import { SiteConfigService } from './site-config.service';
 
@@ -9,7 +8,6 @@ import { SiteConfigService } from './site-config.service';
 export class SiteConfigController {
   constructor(
     private readonly siteConfigService: SiteConfigService,
-    private readonly teamsService: TeamsService,
     private readonly config: ConfigService,
   ) {}
 
@@ -36,7 +34,7 @@ export class SiteConfigController {
   @Post('archive-teams')
   archiveTeams(@Headers('x-admin-key') adminKey: string) {
     this.checkAdminKey(adminKey);
-    return this.teamsService.archiveAllTeams();
+    return this.siteConfigService.archiveAllTeams();
   }
 
   private checkAdminKey(key: string) {

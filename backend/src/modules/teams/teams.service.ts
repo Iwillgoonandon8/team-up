@@ -1,12 +1,14 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { randomUUID } from 'crypto';
 import { BitableService } from '../../integrations/feishu/bitable.service';
+import { SiteConfigService } from '../site-config/site-config.service';
 import { CreateTeamDto, MAX_TEAMS_PER_STAGE } from './dto';
 
 type ListTeamsParams = {
@@ -27,10 +29,16 @@ type ListTeamApplicationsParams = {
 export class TeamsService {
   constructor(
     private readonly config: ConfigService,
-    private readonly bitable: BitableService
+    private readonly bitable: BitableService,
+    private readonly siteConfigService: SiteConfigService,
   ) {}
 
   async createTeam(dto: CreateTeamDto, leaderUserId: string) {
+    const siteConfig = await this.siteConfigService.getConfig();
+    if (!siteConfig.teamRegOpen) {
+      throw new ForbiddenException('组队报名当前已关闭');
+    }
+
     const tableId = this.getRequiredConfig('FEISHU_TEAMS_TABLE_ID');
 
     const membersTableId = this.getRequiredConfig('FEISHU_TEAM_MEMBERS_TABLE_ID');

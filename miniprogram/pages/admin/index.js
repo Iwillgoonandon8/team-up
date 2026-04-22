@@ -20,10 +20,10 @@ Page({
   },
 
   onLoad() {
+    // 仅预填输入框，不自动解锁，避免转场动画期间提前渲染配置面板
     const saved = wx.getStorageSync('adminKey')
     if (saved) {
-      this.setData({ unlocked: true, keyInput: saved })
-      this.loadConfig()
+      this.setData({ keyInput: saved })
     }
   },
 

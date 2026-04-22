@@ -10,6 +10,14 @@ Page({
     topic: '',
     maxMembers: 4,
     submitting: false,
+    teamRegOpen: true,
+  },
+
+  async onLoad() {
+    try {
+      const cfg = await request({ url: '/site-config' })
+      this.setData({ teamRegOpen: cfg.teamRegOpen !== false })
+    } catch {}
   },
 
   onInput(e) {
@@ -25,6 +33,9 @@ Page({
   },
 
   async onSubmit() {
+    if (!this.data.teamRegOpen) {
+      return wx.showToast({ title: '组队报名当前已关闭', icon: 'none' })
+    }
     const { teamName, stages, stageIndex, topic, maxMembers } = this.data
     if (!teamName.trim()) return wx.showToast({ title: '请填写队伍名称', icon: 'none' })
     if (!topic.trim()) return wx.showToast({ title: '请填写话题', icon: 'none' })

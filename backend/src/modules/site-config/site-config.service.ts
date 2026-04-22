@@ -101,6 +101,18 @@ export class SiteConfigService {
     };
   }
 
+  /** 将所有未存档的队伍标记为已存档（开启新一期时调用） */
+  async archiveAllTeams(): Promise<{ archivedCount: number }> {
+    const teamsTableId = this.config.get<string>('FEISHU_TEAMS_TABLE_ID');
+    if (!teamsTableId) throw new InternalServerErrorException('Missing FEISHU_TEAMS_TABLE_ID');
+    const all = await this.bitable.listAllRecords(teamsTableId);
+    const toArchive = all.filter(r => this.readStr(r.fields['archived']) !== 'true');
+    await Promise.all(
+      toArchive.map(r => this.bitable.updateRecord(teamsTableId, r.record_id, { archived: 'true' }))
+    );
+    return { archivedCount: toArchive.length };
+  }
+
   private getTableId() {
     const id = this.config.get<string>('FEISHU_CONFIG_TABLE_ID');
     if (!id) throw new InternalServerErrorException('Missing FEISHU_CONFIG_TABLE_ID');
