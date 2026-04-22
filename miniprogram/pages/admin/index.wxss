@@ -84,6 +84,12 @@
   box-sizing: border-box;
 }
 
+.btn-danger {
+  background: #e53935;
+  color: #fff;
+  border: none;
+}
+
 .form-textarea {
   width: 100%;
   min-height: 120rpx;

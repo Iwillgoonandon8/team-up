@@ -1,6 +1,7 @@
-import { Body, Controller, ForbiddenException, Get, Headers, Put } from '@nestjs/common';
+import { Body, Controller, ForbiddenException, Get, Headers, Post, Put } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Public } from '../../common/utils/public.decorator';
+import { TeamsService } from '../teams/teams.service';
 import { UpdateSiteConfigDto } from './dto';
 import { SiteConfigService } from './site-config.service';
 
@@ -8,6 +9,7 @@ import { SiteConfigService } from './site-config.service';
 export class SiteConfigController {
   constructor(
     private readonly siteConfigService: SiteConfigService,
+    private readonly teamsService: TeamsService,
     private readonly config: ConfigService,
   ) {}
 
@@ -25,10 +27,22 @@ export class SiteConfigController {
     @Headers('x-admin-key') adminKey: string,
     @Body() dto: UpdateSiteConfigDto,
   ) {
+    this.checkAdminKey(adminKey);
+    return this.siteConfigService.updateConfig(dto);
+  }
+
+  /** 管理员：存档所有队伍，开启新一期 */
+  @Public()
+  @Post('archive-teams')
+  archiveTeams(@Headers('x-admin-key') adminKey: string) {
+    this.checkAdminKey(adminKey);
+    return this.teamsService.archiveAllTeams();
+  }
+
+  private checkAdminKey(key: string) {
     const expected = this.config.get<string>('ADMIN_KEY');
-    if (!expected || adminKey !== expected) {
+    if (!expected || key !== expected) {
       throw new ForbiddenException('无效的管理员密钥');
     }
-    return this.siteConfigService.updateConfig(dto);
   }
 }

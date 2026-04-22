@@ -7,6 +7,7 @@ Page({
     keyInput: '',
     cfg: null,
     saving: false,
+    archiving: false,
 
     // 表单字段
     teamRegEnabled: true,
@@ -94,6 +95,47 @@ Page({
     } finally {
       this.setData({ saving: false })
     }
+  },
+
+  onArchiveTeams() {
+    wx.showModal({
+      title: '确认存档',
+      content: '将存档所有现有队伍，学员可重新组队。此操作不可撤销，是否继续？',
+      confirmText: '确认存档',
+      confirmColor: '#e53935',
+      success: (res) => {
+        if (!res.confirm) return
+        this.setData({ archiving: true })
+        this.apiPost('/site-config/archive-teams').then((result) => {
+          wx.showToast({ title: '已存档 ' + result.archivedCount + ' 支队伍', icon: 'success' })
+        }).catch(() => {
+          wx.showToast({ title: '操作失败', icon: 'none' })
+        }).then(() => {
+          this.setData({ archiving: false })
+        })
+      }
+    })
+  },
+
+  apiPost(path) {
+    const adminKey = this.data.keyInput.trim() || wx.getStorageSync('adminKey')
+    return new Promise((resolve, reject) => {
+      wx.request({
+        url: app.globalData.baseUrl + path,
+        method: 'POST',
+        data: {},
+        header: {
+          'Content-Type': 'application/json',
+          'x-user-id': app.globalData.userId,
+          'x-admin-key': adminKey,
+        },
+        success(res) {
+          if (res.statusCode >= 200 && res.statusCode < 300) resolve(res.data)
+          else reject(res.data)
+        },
+        fail: reject,
+      })
+    })
   },
 
   apiPut(body) {

@@ -79,7 +79,19 @@
   <view style="padding: 0 24rpx 20rpx;">
     <button class="btn btn-primary" bindtap="onSave" loading="{{saving}}" disabled="{{saving}}">保存配置</button>
   </view>
-  <view style="padding: 0 24rpx 60rpx;">
+
+  <!-- 新一期 -->
+  <view class="card" style="margin-bottom: 0;">
+    <view class="section-hd">🗂 开启新一期</view>
+    <view style="font-size: 26rpx; color: #888; margin-bottom: 20rpx;">
+      将存档所有现有队伍，学员可重新组队。此操作不可撤销。
+    </view>
+    <button class="btn btn-danger" bindtap="onArchiveTeams" loading="{{archiving}}" disabled="{{archiving}}">
+      存档所有队伍，开启新一期
+    </button>
+  </view>
+
+  <view style="padding: 24rpx 24rpx 60rpx;">
     <button class="btn btn-outline" bindtap="logout">退出管理员</button>
   </view>
 

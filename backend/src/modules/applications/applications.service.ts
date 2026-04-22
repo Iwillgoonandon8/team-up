@@ -53,13 +53,22 @@ export class ApplicationsService {
       throw new ConflictException('Team is full');
     }
 
+    // 只考虑未存档的队伍
+    const activeTeamIds = new Set(
+      teams
+        .filter(r => this.readStringField(r.fields.archived) !== 'true')
+        .map(r => this.readStringField(r.fields.team_id))
+    );
     const userIsActiveMember = memberships.some(record => {
       const memberUserId = this.readStringField(record.fields.user_id);
       const memberStatus = this.readStringField(record.fields.status);
-      return memberUserId === applicantUserId && memberStatus === 'active';
+      const memberTeamId = this.readStringField(record.fields.team_id);
+      return memberUserId === applicantUserId && memberStatus === 'active' && activeTeamIds.has(memberTeamId);
     });
     const userIsLeader = teams.some(
-      record => this.readStringField(record.fields.leader_user_id) === applicantUserId
+      record =>
+        this.readStringField(record.fields.leader_user_id) === applicantUserId &&
+        this.readStringField(record.fields.archived) !== 'true'
     );
     if (userIsActiveMember || userIsLeader) {
       throw new ConflictException('User already belongs to a team');
@@ -176,6 +185,17 @@ export class ApplicationsService {
       }
 
       const existingMembers = await this.bitable.listAllRecords(teamMembersTableId);
+
+      // 检查申请人是否已加入任意其他队伍（防止并发审批导致重复入队）
+      const alreadyInAnyTeam = existingMembers.some(record => {
+        const memberUserId = this.readStringField(record.fields.user_id);
+        const memberStatus = this.readStringField(record.fields.status);
+        return memberUserId === applicantUserId && memberStatus === 'active';
+      });
+      if (alreadyInAnyTeam) {
+        throw new ConflictException('该用户已加入其他队伍，无法通过此申请');
+      }
+
       const alreadyInTeam = existingMembers.some(record => {
         const memberTeamId = this.readStringField(record.fields.team_id);
         const memberUserId = this.readStringField(record.fields.user_id);
