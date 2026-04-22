@@ -1,10 +1,16 @@
 <view wx:if="{{team}}">
 
+  <!-- 分享入口提示 -->
+  <view class="share-banner" wx:if="{{fromShare}}">
+    <text wx:if="{{loginPending}}">🔄 登录中，完成后即可申请加入该队伍…</text>
+    <text wx:else>🔗 来自好友分享，填写留言后可直接申请加入</text>
+  </view>
+
   <!-- 队伍基本信息 -->
   <view class="card">
     <view class="detail-header">
       <text class="detail-name">{{team.team_name}}</text>
-      <view class="tag {{team.recruit_status === 'open' ? 'tag-green' : 'tag-gray'}}">
+      <view class="{{team.recruit_status === 'open' ? 'status-open' : 'status-closed'}}">
         {{team.recruit_status === 'open' ? '招募中' : '已满员'}}
       </view>
     </view>
@@ -22,10 +28,22 @@
       <text class="label">队长</text>
       <text class="value">{{team.leader_user_id}}</text>
     </view>
+
+    <!-- 队长分享按钮 -->
+    <button
+      wx:if="{{isLeader}}"
+      class="btn btn-outline share-btn"
+      open-type="share"
+    >📤 分享给好友</button>
+  </view>
+
+  <!-- 登录中占位（来自分享且尚未登录） -->
+  <view class="card notice-card" wx:if="{{loginPending}}">
+    <text>🔄 登录中，稍候即可查看申请状态…</text>
   </view>
 
   <!-- 我的队伍：显示打卡按钮 -->
-  <view class="card action-card" wx:if="{{isMyTeam}}">
+  <view class="card action-card" wx:elif="{{isMyTeam}}">
     <text class="action-label">✅ 这是你的队伍</text>
     <button class="btn btn-primary btn-sm" bindtap="goCheckin">📝 今日打卡</button>
   </view>

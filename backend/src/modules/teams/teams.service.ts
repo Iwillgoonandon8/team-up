@@ -14,6 +14,7 @@ import { CreateTeamDto, MAX_TEAMS_PER_STAGE } from './dto';
 type ListTeamsParams = {
   status?: string;
   topic?: string;
+  teamName?: string;
   stage?: string;
   page: number;
   pageSize: number;
@@ -98,7 +99,7 @@ export class TeamsService {
     const all = await this.bitable.listAllRecords(teamsTableId);
     const normalizedStatus = (params.status ?? '').trim();
     const normalizedTopic = (params.topic ?? '').trim();
-
+    const normalizedTeamName = (params.teamName ?? '').trim();
     const normalizedStage = (params.stage ?? '').trim();
 
     const filtered = all
@@ -117,6 +118,14 @@ export class TeamsService {
           !this.readString(item.fields['topic'])
             .toLowerCase()
             .includes(normalizedTopic.toLowerCase())
+        ) {
+          return false;
+        }
+        if (
+          normalizedTeamName &&
+          !this.readString(item.fields['team_name'])
+            .toLowerCase()
+            .includes(normalizedTeamName.toLowerCase())
         ) {
           return false;
         }

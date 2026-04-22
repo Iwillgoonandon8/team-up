@@ -64,7 +64,7 @@
 .stage-tab {
   display: inline-flex;
   padding: 8rpx 24rpx;
-  border-radius: 30rpx;
+  border-radius: 6rpx;
   font-size: 24rpx;
   color: #666;
   background: #f5f7fa;
@@ -94,7 +94,7 @@
 
 .filter-tab {
   padding: 8rpx 28rpx;
-  border-radius: 30rpx;
+  border-radius: 6rpx;
   font-size: 26rpx;
   color: #666;
   background: #f5f7fa;
@@ -104,6 +104,39 @@
   background: #e8f0fe;
   color: #1a73e8;
   font-weight: 500;
+}
+
+/* 招募状态筛选按钮：描边+圆点，与 stage 实心色块区分 */
+.filter-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 8rpx 28rpx;
+  border-radius: 6rpx;
+  font-size: 26rpx;
+  border: 2rpx solid #bbb;
+  color: #999;
+  background: transparent;
+}
+
+.filter-status::before {
+  content: '';
+  display: inline-block;
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: #bbb;
+  flex-shrink: 0;
+}
+
+.filter-status.active {
+  border-color: #34a853;
+  color: #34a853;
+  font-weight: 500;
+}
+
+.filter-status.active::before {
+  background: #34a853;
 }
 
 .team-card {

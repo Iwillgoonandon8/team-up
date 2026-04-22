@@ -9,10 +9,10 @@ Page({
     page: 1,
     loading: false,
     hasMore: true,
-    filterTopic: '',
+    filterTeamName: '',
     filterStatus: '',
     filterStage: '',
-    topicInput: '',
+    teamNameInput: '',
     stages: STAGES,
     siteConfig: null,
   },
@@ -38,9 +38,9 @@ Page({
     if (this.data.loading || !this.data.hasMore) return
     this.setData({ loading: true })
     try {
-      const { page, filterTopic, filterStatus, filterStage } = this.data
+      const { page, filterTeamName, filterStatus, filterStage } = this.data
       let query = `page=${page}&pageSize=20`
-      if (filterTopic) query += `&topic=${encodeURIComponent(filterTopic)}`
+      if (filterTeamName) query += `&teamName=${encodeURIComponent(filterTeamName)}`
       if (filterStatus) query += `&status=${filterStatus}`
       if (filterStage) query += `&stage=${encodeURIComponent(filterStage)}`
       const res = await request({ url: `/teams?${query}` })
@@ -60,12 +60,12 @@ Page({
     this.loadTeams()
   },
 
-  onTopicInput(e) {
-    this.setData({ topicInput: e.detail.value })
+  onTeamNameInput(e) {
+    this.setData({ teamNameInput: e.detail.value })
   },
 
-  onTopicSearch() {
-    this.setData({ filterTopic: this.data.topicInput })
+  onTeamNameSearch() {
+    this.setData({ filterTeamName: this.data.teamNameInput })
     this.reload()
   },
 

@@ -2,6 +2,7 @@ App({
   globalData: {
     baseUrl: 'http://127.0.0.1:3000/api',
     userId: '',
+    _loginCallbacks: [],
   },
 
   onLaunch() {
@@ -9,10 +10,10 @@ App({
   },
 
   login() {
-    // 先用缓存的 openid，避免每次冷启动都走网络
     const cached = wx.getStorageSync('openid')
     if (cached) {
       this.globalData.userId = cached
+      this._notifyLogin(cached)
       return
     }
     this._doWxLogin()
@@ -34,8 +35,8 @@ App({
             if (resp.statusCode >= 200 && resp.statusCode < 300 && resp.data.openid) {
               const openid = resp.data.openid
               this.globalData.userId = openid
-              // openid 长期有效，缓存起来
               wx.setStorageSync('openid', openid)
+              this._notifyLogin(openid)
             } else {
               console.error('登录接口异常', resp.data)
             }
@@ -51,7 +52,24 @@ App({
     })
   },
 
-  // 供页面主动刷新登录态（如需）
+  _notifyLogin(userId) {
+    const cbs = this.globalData._loginCallbacks.slice()
+    this.globalData._loginCallbacks = []
+    cbs.forEach(cb => cb(userId))
+  },
+
+  /**
+   * 登录完成后执行回调。
+   * 若已登录则立即执行；否则排队，待登录成功后执行。
+   */
+  whenLoginReady(cb) {
+    if (this.globalData.userId) {
+      cb(this.globalData.userId)
+    } else {
+      this.globalData._loginCallbacks.push(cb)
+    }
+  },
+
   reLogin() {
     wx.removeStorageSync('openid')
     this.globalData.userId = ''

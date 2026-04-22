@@ -50,7 +50,7 @@ page {
   display: inline-flex;
   align-items: center;
   padding: 4rpx 16rpx;
-  border-radius: 20rpx;
+  border-radius: 6rpx;
   font-size: 22rpx;
 }
 
@@ -77,6 +77,51 @@ page {
 .tag-red {
   background: #fce8e6;
   color: #ea4335;
+}
+
+/* 招募状态专用：描边 + 小圆点，与实心属性标签区分 */
+.status-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 6rpx;
+  border: 2rpx solid #34a853;
+  color: #34a853;
+  font-size: 22rpx;
+  background: transparent;
+}
+
+.status-open::before {
+  content: '';
+  display: inline-block;
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: #34a853;
+  flex-shrink: 0;
+}
+
+.status-closed {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 6rpx;
+  border: 2rpx solid #bbb;
+  color: #999;
+  font-size: 22rpx;
+  background: transparent;
+}
+
+.status-closed::before {
+  content: '';
+  display: inline-block;
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: #bbb;
+  flex-shrink: 0;
 }
 
 .empty {

@@ -13,8 +13,8 @@
 
   <!-- 搜索栏 -->
   <view class="search-bar">
-    <input class="search-input" placeholder="搜索话题..." value="{{topicInput}}" bindinput="onTopicInput" bindconfirm="onTopicSearch" />
-    <button class="search-btn" bindtap="onTopicSearch">搜索</button>
+    <input class="search-input" placeholder="搜索队名..." value="{{teamNameInput}}" bindinput="onTeamNameInput" bindconfirm="onTeamNameSearch" />
+    <button class="search-btn" bindtap="onTeamNameSearch">搜索</button>
   </view>
 
   <!-- 阶段筛选 -->
@@ -33,7 +33,7 @@
   <!-- 招募状态筛选 -->
   <view class="filter-tabs">
     <view class="filter-tab {{filterStatus === '' ? 'active' : ''}}" bindtap="onStatusChange" data-status="">全部</view>
-    <view class="filter-tab {{filterStatus === 'open' ? 'active' : ''}}" bindtap="onStatusChange" data-status="open">招募中</view>
+    <view class="filter-status {{filterStatus === 'open' ? 'active' : ''}}" bindtap="onStatusChange" data-status="open">招募中</view>
   </view>
 
   <!-- 队伍列表 -->
@@ -41,7 +41,7 @@
     <view class="card team-card" wx:for="{{teams}}" wx:key="team_id" bindtap="goDetail" data-team-id="{{item.team_id}}">
       <view class="team-header">
         <text class="team-name">{{item.team_name}}</text>
-        <view class="tag {{item.recruit_status === 'open' ? 'tag-green' : 'tag-gray'}}">
+        <view class="{{item.recruit_status === 'open' ? 'status-open' : 'status-closed'}}">
           {{item.recruit_status === 'open' ? '招募中' : '已满员'}}
         </view>
       </view>
