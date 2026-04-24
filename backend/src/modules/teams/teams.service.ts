@@ -9,7 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { randomUUID } from 'crypto';
 import { BitableService } from '../../integrations/feishu/bitable.service';
 import { SiteConfigService } from '../site-config/site-config.service';
-import { CreateTeamDto, MAX_TEAMS_PER_STAGE } from './dto';
+import { CreateTeamDto } from './dto';
 
 type ListTeamsParams = {
   status?: string;
@@ -40,6 +40,11 @@ export class TeamsService {
       throw new ForbiddenException('组队报名当前已关闭');
     }
 
+    const stageEntry = siteConfig.stagesConfig.find(s => s.name === dto.stage);
+    if (!stageEntry) {
+      throw new BadRequestException(`「${dto.stage}」不是有效的学习阶段`);
+    }
+
     const tableId = this.getRequiredConfig('FEISHU_TEAMS_TABLE_ID');
 
     const membersTableId = this.getRequiredConfig('FEISHU_TEAM_MEMBERS_TABLE_ID');
@@ -66,13 +71,13 @@ export class TeamsService {
       throw new ConflictException('你已经有队伍了，不能再创建新队伍');
     }
 
-    // 每个阶段最多 MAX_TEAMS_PER_STAGE 支未存档队伍
+    // 每个阶段有独立上限
     const countInStage = all
       .filter(r => this.isNotArchived(r.fields))
       .filter(r => this.readString(r.fields['stage']) === dto.stage).length;
-    if (countInStage >= MAX_TEAMS_PER_STAGE) {
+    if (countInStage >= stageEntry.maxTeams) {
       throw new BadRequestException(
-        `「${dto.stage}」阶段已有 ${MAX_TEAMS_PER_STAGE} 支队伍，暂不开放新建`
+        `「${dto.stage}」阶段已有 ${stageEntry.maxTeams} 支队伍，暂不开放新建`
       );
     }
 

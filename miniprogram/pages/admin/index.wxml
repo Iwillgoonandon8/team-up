@@ -3,13 +3,16 @@
   <!-- 未解锁：输入密钥 -->
   <view wx:if="{{unlocked === false}}" class="card lock-card">
     <text class="lock-title">🔐 管理员入口</text>
-    <input
-      class="form-input"
-      placeholder="输入管理员密钥"
-      password
-      value="{{keyInput}}"
-      bindinput="onKeyInput"
-    />
+    <view class="key-input-wrap">
+      <input
+        class="form-input key-input"
+        placeholder="输入管理员密钥"
+        password="{{!showKey}}"
+        value="{{keyInput}}"
+        bindinput="onKeyInput"
+      />
+      <text class="eye-btn" bindtap="toggleShowKey">{{showKey ? '🙈' : '👁'}}</text>
+    </view>
     <button class="btn btn-primary" style="margin-top: 24rpx;" bindtap="unlock">进入</button>
   </view>
 
@@ -75,6 +78,59 @@
       </view>
       <view class="status-hint">
         当前状态：<text class="{{cfg.checkinOpen ? 'open' : 'closed'}}">{{cfg.checkinOpen ? '✅ 开放中' : '🔒 已关闭'}}</text>
+      </view>
+    </view>
+
+    <!-- 阶段配置 -->
+    <view class="card">
+      <view class="section-hd">📚 学习阶段与队伍上限</view>
+
+      <view class="stage-row stage-row-hd">
+        <text class="stage-col-name">阶段名称</text>
+        <text class="stage-col-max">上限</text>
+        <text class="stage-col-del"></text>
+      </view>
+
+      <view class="stage-row" wx:for="{{stagesConfig}}" wx:key="index">
+        <view class="stage-col-name">
+          <input
+            class="stage-input-name"
+            value="{{item.name}}"
+            data-index="{{index}}"
+            bindinput="onStageNameInput"
+          />
+        </view>
+        <view class="stage-col-max">
+          <input
+            class="stage-input-max"
+            type="number"
+            value="{{item.maxTeams}}"
+            data-index="{{index}}"
+            bindinput="onStageMaxInput"
+          />
+        </view>
+        <view class="stage-del stage-col-del" bindtap="onDeleteStage" data-index="{{index}}">✕</view>
+      </view>
+
+      <view class="stage-row stage-add-row">
+        <view class="stage-col-name">
+          <input
+            class="stage-input-name"
+            placeholder="新阶段名"
+            value="{{newStageName}}"
+            bindinput="onNewStageNameInput"
+          />
+        </view>
+        <view class="stage-col-max">
+          <input
+            class="stage-input-max"
+            type="number"
+            placeholder="上限"
+            value="{{newStageMax}}"
+            bindinput="onNewStageMaxInput"
+          />
+        </view>
+        <view class="stage-add-btn stage-col-del" bindtap="onAddStage">＋</view>
       </view>
     </view>
 

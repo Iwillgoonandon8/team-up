@@ -3,6 +3,20 @@ import { ConfigService } from '@nestjs/config';
 import { BitableService } from '../../integrations/feishu/bitable.service';
 import { UpdateSiteConfigDto } from './dto';
 
+export type StageConfig = {
+  name: string;
+  maxTeams: number;
+};
+
+export const DEFAULT_STAGES: StageConfig[] = [
+  { name: 'F1_基础', maxTeams: 10 },
+  { name: 'F2_基础', maxTeams: 10 },
+  { name: 'F_加强',  maxTeams: 10 },
+  { name: 'E1_基础', maxTeams: 10 },
+  { name: 'E2_基础', maxTeams: 10 },
+  { name: 'E_加强',  maxTeams: 10 },
+];
+
 export type SiteConfig = {
   teamRegEnabled: boolean;
   teamRegOpenDate: number;
@@ -11,6 +25,7 @@ export type SiteConfig = {
   checkinOpenDate: number;
   checkinCloseDate: number;
   notice: string;
+  stagesConfig: StageConfig[];
   // 计算后的实际状态（给前端直接用）
   teamRegOpen: boolean;
   checkinOpen: boolean;
@@ -24,6 +39,7 @@ const DEFAULTS: Omit<SiteConfig, 'teamRegOpen' | 'checkinOpen'> = {
   checkinOpenDate: 0,
   checkinCloseDate: 0,
   notice: '',
+  stagesConfig: DEFAULT_STAGES,
 };
 
 @Injectable()
@@ -50,9 +66,14 @@ export class SiteConfigService {
       checkinOpenDate: this.readNum(raw['checkin_open_date']),
       checkinCloseDate: this.readNum(raw['checkin_close_date']),
       notice: this.readStr(raw['notice']),
+      stagesConfig: this.readStages(raw['stages_config']),
     };
 
-    return { ...cfg, teamRegOpen: this.isOpen(cfg.teamRegEnabled, cfg.teamRegOpenDate, cfg.teamRegCloseDate), checkinOpen: this.isOpen(cfg.checkinEnabled, cfg.checkinOpenDate, cfg.checkinCloseDate) };
+    return {
+      ...cfg,
+      teamRegOpen: this.isOpen(cfg.teamRegEnabled, cfg.teamRegOpenDate, cfg.teamRegCloseDate),
+      checkinOpen: this.isOpen(cfg.checkinEnabled, cfg.checkinOpenDate, cfg.checkinCloseDate),
+    };
   }
 
   async updateConfig(dto: UpdateSiteConfigDto): Promise<SiteConfig> {
@@ -69,6 +90,7 @@ export class SiteConfigService {
     if (dto.checkinOpenDate !== undefined) fields['checkin_open_date'] = dto.checkinOpenDate;
     if (dto.checkinCloseDate !== undefined) fields['checkin_close_date'] = dto.checkinCloseDate;
     if (dto.notice !== undefined) fields['notice'] = dto.notice;
+    if (dto.stagesConfig !== undefined) fields['stages_config'] = JSON.stringify(dto.stagesConfig);
 
     if (this.recordId) {
       await this.bitable.updateRecord(tableId, this.recordId, fields);
@@ -89,6 +111,23 @@ export class SiteConfigService {
     return true;
   }
 
+  private readStages(v: unknown): StageConfig[] {
+    try {
+      let str: string;
+      if (typeof v === 'string') {
+        str = v;
+      } else if (Array.isArray(v)) {
+        // Feishu 富文本格式：[{ type: 'text', text: '...' }, ...]
+        str = (v as Array<{ text?: string }>).map(seg => seg.text ?? '').join('');
+      } else {
+        return DEFAULT_STAGES;
+      }
+      const parsed = JSON.parse(str);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed as StageConfig[];
+    } catch {}
+    return DEFAULT_STAGES;
+  }
+
   private defaultFields() {
     return {
       team_reg_enabled: 'true',
@@ -98,6 +137,7 @@ export class SiteConfigService {
       checkin_open_date: 0,
       checkin_close_date: 0,
       notice: '',
+      stages_config: JSON.stringify(DEFAULT_STAGES),
     };
   }
 

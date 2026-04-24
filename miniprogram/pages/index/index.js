@@ -1,7 +1,5 @@
 const { request } = require('../../utils/request')
 
-const STAGES = ['F1_基础', 'F2_基础', 'F_加强', 'E1_基础', 'E2_基础', 'E_加强']
-
 Page({
   data: {
     teams: [],
@@ -13,7 +11,7 @@ Page({
     filterStatus: '',
     filterStage: '',
     teamNameInput: '',
-    stages: STAGES,
+    stages: [],
     siteConfig: null,
   },
 
@@ -25,7 +23,8 @@ Page({
   async loadSiteConfig() {
     try {
       const cfg = await request({ url: '/site-config' })
-      this.setData({ siteConfig: cfg })
+      const stages = (cfg.stagesConfig || []).map(function(s) { return s.name })
+      this.setData({ siteConfig: cfg, stages })
     } catch {}
   },
 

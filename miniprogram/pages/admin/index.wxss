@@ -4,6 +4,25 @@
   flex-direction: column;
 }
 
+.key-input-wrap {
+  display: flex;
+  align-items: center;
+  background: #f5f7fa;
+  border-radius: 12rpx;
+}
+
+.key-input {
+  flex: 1;
+  background: transparent;
+  border-radius: 0;
+}
+
+.eye-btn {
+  padding: 0 24rpx;
+  font-size: 36rpx;
+  flex-shrink: 0;
+}
+
 .lock-title {
   font-size: 34rpx;
   font-weight: 700;
@@ -88,6 +107,89 @@
   background: #e53935;
   color: #fff;
   border: none;
+}
+
+.stage-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 16rpx;
+}
+
+.stage-row-hd {
+  margin-bottom: 8rpx;
+}
+
+.stage-row-hd text {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.stage-col-name {
+  flex: 1;
+}
+
+.stage-col-max {
+  width: 72rpx;
+  flex-shrink: 0;
+}
+
+.stage-col-del {
+  width: 40rpx;
+  flex-shrink: 0;
+}
+
+/* 名称输入框：不设 width，让 flex:1 决定宽度 */
+.stage-input-name {
+  height: 64rpx;
+  background: #f5f7fa;
+  border-radius: 8rpx;
+  padding: 0 16rpx;
+  font-size: 26rpx;
+  color: #333;
+  box-sizing: border-box;
+  display: block;
+}
+
+/* 上限输入框：固定宽度列内撑满 */
+.stage-input-max {
+  width: 72rpx;
+  height: 64rpx;
+  background: #f5f7fa;
+  border-radius: 8rpx;
+  padding: 0 8rpx;
+  font-size: 26rpx;
+  color: #333;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.stage-del {
+  width: 40rpx;
+  height: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ea4335;
+  font-size: 28rpx;
+  flex-shrink: 0;
+}
+
+.stage-add-row {
+  margin-top: 8rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.stage-add-btn {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1a73e8;
+  font-size: 36rpx;
+  flex-shrink: 0;
 }
 
 .form-textarea {
